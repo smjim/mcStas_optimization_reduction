@@ -2,6 +2,7 @@ import numpy as np
 import mcstasHelper as mc
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Circle
+import re
 import argparse
 
 parser = argparse.ArgumentParser(description='Process MCStas data and extract ROI.')
@@ -26,6 +27,7 @@ dy = (extent[3] - extent[2]) / (I.shape[0] - 1)
 # Create the mask for the ROI
 mask = np.zeros_like(I, dtype=bool)
 
+roi_area = 0
 if args.square:
 	x0, x1, y0, y1 = args.square
 
@@ -35,6 +37,8 @@ if args.square:
 
 	# Set the corresponding elements in the mask to True
 	mask[y_indices[0][:, np.newaxis], x_indices[0]] = True
+	
+	roi_area = (x1-x0)*(y1-y0) 
 
 if args.circle:
 	x0, y0, radius = args.circle
@@ -42,6 +46,8 @@ if args.circle:
 	# Circle ROI defined by center (x0, y0) and radius
 	x_indices, y_indices = np.meshgrid(np.arange(I.shape[1]), np.arange(I.shape[0]))
 	mask = ((extent[0] + x_indices * dx - x0) ** 2 + (extent[2] + y_indices * dy - y0) ** 2 <= radius ** 2)
+	
+	roi_area = np.pi*radius**2
 
 ## Show ROI mask
 #plt.imshow(mask, cmap='binary', extent=extent)
@@ -58,7 +64,12 @@ if args.circle:
 roi_sum = np.sum(I[mask])
 sum_err = np.sqrt(np.sum(np.square(I[mask]))) 
 
+# Determine units
+unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
+unit2 = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
+
 print("\nSum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}".format(sum_err)) 
+print("\nArea within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']') 
 
 # Show data with mask outlined
 fig, ax = plt.subplots()
@@ -68,7 +79,7 @@ ax.set_title(dataHeader['component'])
 ax.set_xlabel(dataHeader['xlabel'])
 ax.set_ylabel(dataHeader['ylabel'])
 cbar = fig.colorbar(img, ax=ax)
-cbar.set_label(dataHeader['zvar'])
+cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 
 # Add patch for ROI outline on plot
 if args.square:
@@ -79,3 +90,4 @@ if args.circle:
 	ax.add_patch(circle)
 
 plt.show()
+

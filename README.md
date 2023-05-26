@@ -24,15 +24,15 @@ options:
 #### Example outputs:
 `$ python3 display.py Source_image.dat`  
 
-![source_image.png](./source_image.png)  
+![doc/source_image.png](./doc/source_image.png)  
 
 `$ python3 display.py Source_image.dat x`    
 
-![x_crossSection.png](./x_crossSection.png)  
+![doc/x_crossSection.png](./doc/x_crossSection.png)  
 
 `$ python3 display.py Source_spectrum.dat`  
 
-![source_spectrum.png](./source_spectrum.png)
+![doc/source_spectrum.png](./doc/source_spectrum.png)
 
 ### Find counts within ROI
 Find counts within a specified region of interest. Two types of ROIs are available, specified with --square or --circle. Square ROI coordinates define x and y bounds, while circle ROI coordinates and radius define center of circle and radius. Total counts within region are found from Intensity data, and error on counts found from Intensity error data. 
@@ -58,14 +58,14 @@ options:
 Sum within ROI:  6.11e+12  ±  4.91e+10  
 Area within ROI:  5.03e+01 [cm*cm]
 
-![circle_roi.png](./circle_roi.png)  
+![doc/circle_roi.png](./doc/circle_roi.png)  
 
 `$ python3 count.py Source_image.dat --square -3 3 -3 3`  
 
 Sum within ROI:  5.04e+12  ±  4.46e+10  
 Area within ROI:  3.60e+01 [cm*cm]  
 
-![square_roi.png](./square_roi.png)
+![doc/square_roi.png](./doc/square_roi.png)
 
 
 ## Contributing and contact
