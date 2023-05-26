@@ -1,5 +1,5 @@
 # McStas Reduction Analysis
-
+A collection of python tools for plotting, analysis, and reduction of McStas output data
 
 
 ## Getting started
