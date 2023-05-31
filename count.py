@@ -1,7 +1,5 @@
 import numpy as np
 import mcstasHelper as mc
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle, Circle
 import re
 import argparse
 
@@ -11,6 +9,7 @@ parser.add_argument('--square', nargs=4, type=float, metavar=('x0', 'x1', 'y0', 
 					help='Square ROI limits: x0 x1 y0 y1')
 parser.add_argument('--circle', nargs=3, type=float, metavar=('x0', 'y0', 'radius'),
 					help='Circular ROI limits: x0 y0 radius')
+parser.add_argument('--noshow', action='store_true', help='if true then dont display graph, only show count')
 
 args = parser.parse_args()
 inFile = args.filename
@@ -49,17 +48,6 @@ if args.circle:
 	
 	roi_area = np.pi*radius**2
 
-## Show ROI mask
-#plt.imshow(mask, cmap='binary', extent=extent)
-#plt.colorbar()
-#plt.title('ROI')
-#plt.show()
-## Show data with mask applied
-#plt.imshow(mask*I, cmap='plasma', extent=extent)
-#plt.colorbar()
-#plt.title('Counts within ROI')
-#plt.show()
-
 # Apply the mask and calculate the sum within the ROI
 roi_sum = np.sum(I[mask])
 sum_err = np.sqrt(np.sum(np.square(I[mask]))) 
@@ -68,26 +56,41 @@ sum_err = np.sqrt(np.sum(np.square(I[mask])))
 unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 unit2 = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
 
-print("\nSum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}".format(sum_err)) 
-print("\nArea within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']') 
+print("Sum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}".format(sum_err)) 
+print("Area within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']\n') 
 
-# Show data with mask outlined
-fig, ax = plt.subplots()
+if (args.noshow==0):
+	import matplotlib.pyplot as plt
+	from matplotlib.patches import Rectangle, Circle
 
-img = ax.imshow(I, extent=extent, cmap='plasma')
-ax.set_title(dataHeader['component'])
-ax.set_xlabel(dataHeader['xlabel'])
-ax.set_ylabel(dataHeader['ylabel'])
-cbar = fig.colorbar(img, ax=ax)
-cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	## Show ROI mask
+	#plt.imshow(mask, cmap='binary', extent=extent)
+	#plt.colorbar()
+	#plt.title('ROI')
+	#plt.show()
+	## Show data with mask applied
+	#plt.imshow(mask*I, cmap='plasma', extent=extent)
+	#plt.colorbar()
+	#plt.title('Counts within ROI')
+	#plt.show()
 
-# Add patch for ROI outline on plot
-if args.square:
-	square = Rectangle((x0, y0), (x1 - x0), (y1 - y0), fill=False, color='red', linewidth=2)
-	ax.add_patch(square)
-if args.circle:
-	circle = Circle((x0, y0), radius, fill=False, color='red', linewidth=2)
-	ax.add_patch(circle)
-
-plt.show()
+	# Show data with mask outlined
+	fig, ax = plt.subplots()
+	
+	img = ax.imshow(I, extent=extent, cmap='plasma')
+	ax.set_title(dataHeader['component'])
+	ax.set_xlabel(dataHeader['xlabel'])
+	ax.set_ylabel(dataHeader['ylabel'])
+	cbar = fig.colorbar(img, ax=ax)
+	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	
+	# Add patch for ROI outline on plot
+	if args.square:
+		square = Rectangle((x0, y0), (x1 - x0), (y1 - y0), fill=False, color='red', linewidth=2)
+		ax.add_patch(square)
+	if args.circle:
+		circle = Circle((x0, y0), radius, fill=False, color='red', linewidth=2)
+		ax.add_patch(circle)
+	
+	plt.show()
 
