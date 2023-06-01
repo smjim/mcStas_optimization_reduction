@@ -83,6 +83,11 @@ if dataHeader['type'][:8]=="array_2d":
 elif dataHeader['type'][:8]=="array_1d":
 	I, sigI, N, L = mc.mcstas2np(inFile)
 
+    hm_I = np.max(I) / 2 
+    left_idx = np.argmin(np.abs(I[:np.argmax(I)] - hm_I))
+    right_idx = np.argmin(np.abs(I[np.argmax(I):] - hm_I)) + np.argmax(I)
+    print(L[right_idx] - L[left_idx])
+
 	unit = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 	dx = (L[-1] - L[0]) / np.size(L) 
 
