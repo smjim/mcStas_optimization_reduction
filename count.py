@@ -57,7 +57,7 @@ unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 unit2 = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
 
 print("Sum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}".format(sum_err)) 
-print("Area within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']\n') 
+print("Area within ROI: ", "{:.2e}".format(roi_area)+' [s*'+unit1[0]+'*'+unit2[0]+']\n') 
 
 if (args.noshow==0):
 	import matplotlib.pyplot as plt
@@ -82,7 +82,7 @@ if (args.noshow==0):
 	ax.set_xlabel(dataHeader['xlabel'])
 	ax.set_ylabel(dataHeader['ylabel'])
 	cbar = fig.colorbar(img, ax=ax)
-	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' [s*'+unit1[0]+'*'+unit2[0]+']')
 	
 	# Add patch for ROI outline on plot
 	if args.square:
