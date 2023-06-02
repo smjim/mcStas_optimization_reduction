@@ -16,7 +16,8 @@ plot_type = args.plot_type.lower()
 
 I, sigI, N, dataHeader, L = mc.extractMcStasData(inFile) 
 component = dataHeader['component']
-print(json.dumps(dataHeader, indent=4))
+#print(json.dumps(dataHeader, indent=4))
+print(inFile)
 
 if dataHeader['type'][:8]=="array_2d":
 	extent = np.array(dataHeader['xylimits'].split(),dtype=float)
@@ -83,11 +84,6 @@ if dataHeader['type'][:8]=="array_2d":
 elif dataHeader['type'][:8]=="array_1d":
 	I, sigI, N, L = mc.mcstas2np(inFile)
 
-    hm_I = np.max(I) / 2 
-    left_idx = np.argmin(np.abs(I[:np.argmax(I)] - hm_I))
-    right_idx = np.argmin(np.abs(I[np.argmax(I):] - hm_I)) + np.argmax(I)
-    print(L[right_idx] - L[left_idx])
-
 	unit = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 	dx = (L[-1] - L[0]) / np.size(L) 
 
@@ -97,7 +93,7 @@ elif dataHeader['type'][:8]=="array_1d":
 	plt.title(component, pad=10)
 	plt.show()
 
-	plt.plot(N)
+	plt.plot(L, N)
 	plt.xlabel(dataHeader['xlabel'])
 	plt.ylabel('N/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 	plt.title(component, pad=10)
