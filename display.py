@@ -10,6 +10,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("inFile", help="Input file")
 parser.add_argument("plot_type", nargs="?", default="full", choices=["x", "y", "full"],
 				help="Plot type: 'x', 'y', or 'full'")
+parser.add_argument('--showN', action='store_true', help='if true then display plots for N')
+
 args = parser.parse_args()
 inFile = args.inFile
 plot_type = args.plot_type.lower()
@@ -61,19 +63,20 @@ if dataHeader['type'][:8]=="array_2d":
 		dx = (extent[1] - extent[0]) / (np.array(imI).shape[1] - 1)
 		dy = (extent[3] - extent[2]) / (np.array(imI).shape[0] - 1)
 
-		plt.imshow(np.array(imN), extent=extent, cmap='plasma') 
-		plt.colorbar().set_label('N/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
-		plt.xlabel(dataHeader['xlabel'])
-		plt.ylabel(dataHeader['ylabel'])
-		plt.title(component, pad=10)
-		plt.show()
-
 		plt.imshow(np.array(imI), extent=extent, cmap='plasma') 
 		plt.colorbar().set_label('Intensity/ '+"{:.2e}".format(dx*dy)+' [s*'+unit1[0]+'*'+unit2[0]+']')
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel(dataHeader['ylabel'])
 		plt.title(component, pad=10)
 		plt.show()
+
+		if (args.showN==1):
+			plt.imshow(np.array(imN), extent=extent, cmap='plasma') 
+			plt.colorbar().set_label('N/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+			plt.xlabel(dataHeader['xlabel'])
+			plt.ylabel(dataHeader['ylabel'])
+			plt.title(component, pad=10)
+			plt.show()
 
 		## Show the TIFF file with tags
 		#mc.show_tiff(inFile+"_N.tif", extent, dataHeader['xlabel'], dataHeader['ylabel'])
@@ -93,11 +96,12 @@ elif dataHeader['type'][:8]=="array_1d":
 	plt.title(component, pad=10)
 	plt.show()
 
-	plt.plot(L, N)
-	plt.xlabel(dataHeader['xlabel'])
-	plt.ylabel('N/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
-	plt.title(component, pad=10)
-	plt.show()
+	if (args.showN==1):
+		plt.plot(L, N)
+		plt.xlabel(dataHeader['xlabel'])
+		plt.ylabel('N/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
+		plt.title(component, pad=10)
+		plt.show()
 
 else:
 	print("Unknown Data Type.")
