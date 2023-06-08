@@ -67,6 +67,47 @@ Area within ROI:  3.60e+01 [cm*cm]
 
 ![doc/square_roi.png](./doc/square_roi.png)
 
+### Verify experimental run
+Confirm average beam intensity is constant throughout run. Plot and remove outliers if not.
+
+```
+usage: beamFOM.py [-h] [--rebin newSize] [--outlier n] [--noshow] inFile
+
+positional arguments:
+  inFile           Input file
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --rebin newSize  Resized array length: newSize
+  --outlier n      if true, then eliminate datapoints greater than n sigma
+                   away from the mean
+  --noshow         if true then only show value, dont display plot
+```
+
+#### Example outputs:
+
+`python3 beamFOM.py CG2_runnum.nxs.h5 --rebin 300`
+
+! New size is not a factor of old size, cutting out last  254  entries
+! New size is not a factor of old size, cutting out last  254  entries
+! New size is not a factor of old size, cutting out last  254  entries
+1.94e+04 ± 7.41e+00  counts/ second
+deviance/ ndof =  2.7690690750484324
+
+![doc/beamFOM.png](./doc/beamFOM.png)
+
+`python3 beamFOM.py CG2_runnum.nxs.h5 --rebin 300 --outlier 7`
+
+! New size is not a factor of old size, cutting out last  254  entries
+! New size is not a factor of old size, cutting out last  254  entries
+! New size is not a factor of old size, cutting out last  254  entries
+1.94e+04 ± 7.41e+00  counts/ second
+deviance/ ndof =  2.7690690750484324
+with outliers removed :
+1.94e+04 ± 7.42e+00  counts/ second
+deviance/ ndof =  1.2133389079191892
+
+![doc/beamFOM2.png](./doc/beamFOM2.png)
 
 ## Contributing and contact
 Open to contributions, contact rogersjm@ornl.gov or jroger87@vols.utk.edu
