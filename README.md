@@ -68,6 +68,30 @@ Area within ROI:  3.60e+01 [cm*cm]
 
 ![doc/square_roi.png](./doc/square_roi.png)
 
+### Describe 1d spectra output
+Find FWHM, peak wavelength, intensity within FWHM, and error on intensity within FWHM. Option '--noshow' causes program to only print derived quantities without showing 1d graph.
+
+```
+usage: count_1d.py [-h] [--noshow] inFile
+
+positional arguments:
+  inFile      Input file
+
+options:
+  -h, --help  show this help message and exit
+  --noshow    if true then dont display graph, only show count
+```
+
+#### Example outputs:
+
+`python3 python3 count_1d.py Sample_Position_spectrum.dat`
+
+fwhm: 2.60  
+wavelength: 4.125, intensity: 59253294.15  
+sum within fwhm: 2435743247.6000004 ± 4277768.25916  
+
+![doc/count_1d.png](./doc/count_1d.png)
+
 ### Verify experimental run
 Confirm average beam intensity is constant throughout run. Plot and remove outliers if not. Using the '--rebin' flag, the data can be re-binned into larger bins for better results. The '--outlier' flag can be used to specify a threshold for removing outliers as 'n' sigma away from the mean. '--noshow' will only print average counts/second along with Poisson deviance and exit without showing plot of counts/second throughout entire run, which can be useful in identifying periods of time where measured intensity does not match mean.
 
