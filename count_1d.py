@@ -40,7 +40,7 @@ if dataHeader['type'][:8]=="array_1d":
 
 		plt.errorbar(L, I, yerr=sigI, fmt='o', capsize=2)
 		plt.xlabel(dataHeader['xlabel'])
-		plt.ylabel('Intensity/ '+"{:.2e}".format(dx)+' [s*'+unit[0]+']')
+		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 		plt.title(component, pad=10)
 		plt.show()
 	

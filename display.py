@@ -38,7 +38,7 @@ if dataHeader['type'][:8]=="array_2d":
 		x = np.linspace(extent[0], extent[1], np.size(cross_section))
 		plt.errorbar(x, cross_section, err_cross_section, capsize=2)
 		plt.xlabel(dataHeader['xlabel'])
-		plt.ylabel('Intensity/ '+"{:.2e}".format(dx)+' [s*'+unit[0]+']')
+		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 		plt.title("X Cross-Section: "+component)
 		plt.show()
 	elif plot_type == "y":
@@ -53,7 +53,7 @@ if dataHeader['type'][:8]=="array_2d":
 		plt.errorbar(x, cross_section, err_cross_section, capsize=2)
 		plt.xlim(extent[2], extent[3])
 		plt.xlabel(dataHeader['ylabel'])
-		plt.ylabel('Intensity/ '+"{:.2e}".format(dx)+' [s*'+unit[0]+']')
+		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 		plt.title("Y Cross-Section: "+component)
 		plt.show()
 	elif plot_type == "full":
@@ -64,7 +64,7 @@ if dataHeader['type'][:8]=="array_2d":
 		dy = (extent[3] - extent[2]) / (np.array(imI).shape[0] - 1)
 
 		plt.imshow(np.array(imI), extent=extent, cmap='plasma') 
-		plt.colorbar().set_label('Intensity/ '+"{:.2e}".format(dx*dy)+' [s*'+unit1[0]+'*'+unit2[0]+']')
+		plt.colorbar().set_label('Intensity [n/s]/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel(dataHeader['ylabel'])
 		plt.title(component, pad=10)
@@ -92,7 +92,7 @@ elif dataHeader['type'][:8]=="array_1d":
 
 	plt.errorbar(L, I, yerr=sigI, fmt='o', capsize=2)
 	plt.xlabel(dataHeader['xlabel'])
-	plt.ylabel('Intensity/ '+"{:.2e}".format(dx)+' [s*'+unit[0]+']')
+	plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 	plt.title(component, pad=10)
 	plt.show()
 
