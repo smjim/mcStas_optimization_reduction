@@ -53,9 +53,9 @@ if args.rebin:
 
 	# rebin counts_per_bin, time_per_bin
 	newSize = int(args.rebin[0])
-	rebinned_counts = rebin_histogram(counts_per_bin, newSize)
-	rebinned_time = rebin_histogram(event_time_zero[:-1], newSize)/ (event_time_zero[:-1].size // newSize)
-	rebinned_counts_err = np.sqrt(rebin_histogram(np.square(counts_per_bin_err), newSize))
+	rebinned_counts = rebin_histogram(counts_per_bin, newSize) # sum col-wise
+	rebinned_time = rebin_histogram(event_time_zero[:-1], newSize)/ (event_time_zero[:-1].size // newSize) # average col-wise
+	rebinned_counts_err = np.sqrt(rebin_histogram(np.square(counts_per_bin_err), newSize)) # sqrt of sum col-wise of squared values
 
 	# find count rate
 	event_time = rebinned_time[:-1]
@@ -65,7 +65,7 @@ if args.rebin:
 else:
 	# find count rate
 	event_time = event_time_zero[:-1]
-	#time_per_bin = time_per_bin
+	time_per_bin = time_per_bin
 	counts_per_second = counts_per_bin/ time_per_bin
 	counts_per_second_err = counts_per_bin_err/ event_time_zero[:-1]
 
@@ -94,6 +94,7 @@ if (args.outlier==1):
 	print('without removing outliers:')
 print("{:.2e}".format(k), "±", "{:.2e}".format(k_err)," counts/ second")
 print("deviance/ ndof = ", deviance_ndof)
+print('average bin width:',np.average(time_per_bin),'s')
 
 # if --outlier == true, then eliminate datapoints that lie > n sigma away from the mean
 if (args.outlier):
