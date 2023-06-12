@@ -7,6 +7,7 @@ import glob
 import re
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
 from matplotlib.animation import FuncAnimation
 from matplotlib.ticker import ScalarFormatter
 
@@ -59,9 +60,14 @@ def update_image(frame):
 	if pause:
 		animation.event_source.stop()
 
-	#return
+	# Convert the plot to an image
+	fig.canvas.draw()
+	frame_image = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
 
-# Function to handle key presses
+	# Append the frame image to the list
+	frames_list.append(frame_image)
+
+# Function to handle key presses 
 def on_key_press(event):
 	global pause
 	if event.key == ' ':
@@ -73,6 +79,7 @@ if __name__ == '__main__':
 	# Argument parsing
 	parser = argparse.ArgumentParser(description='Plot data from files as a video')
 	parser.add_argument('filenames', nargs='+', help='Input filenames (supports wildcard patterns)')
+	parser.add_argument('--save', metavar='outFile', help='if provided, save video as GIF with specified output file name')
 	args = parser.parse_args()
 
 	# Expand wildcard patterns and get the list of all matching filenames
@@ -106,7 +113,14 @@ if __name__ == '__main__':
 	plot_data(filenames[0])
 
 	# Create the animation
-	animation = FuncAnimation(fig, update_image, frames=len(filenames), interval=600, repeat=True)
+	if args.save is not None:	# if saving gif, dont repeat
+		repeat = False
+	else:						# if not saving gif, repeat
+		repeat = True
+	animation = FuncAnimation(fig, update_image, frames=len(filenames), interval=600, repeat=repeat)
+
+	# Create a list to store the individual frames
+	frames_list = []
 
 	# Pause flag to control animation state
 	pause = False
@@ -117,3 +131,9 @@ if __name__ == '__main__':
 	# Display the animation
 	plt.show()
 
+if args.save is not None: 
+	outFile = args.save
+	if outFile:
+		frames_list[0].save(outFile, format='GIF', append_images=frames_list[1:], save_all=True, duration=200, loop=0)
+	else:
+		print("Please provide an output file name when using the '--save' argument.")
