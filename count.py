@@ -57,7 +57,7 @@ unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 unit2 = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
 
 print("Sum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}".format(sum_err)) 
-print("Area within ROI: ", "{:.2e}".format(roi_area)+' [s*'+unit1[0]+'*'+unit2[0]+']\n') 
+print("Area within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']\n') 
 
 if (args.noshow==0):
 	import matplotlib.pyplot as plt
@@ -78,7 +78,7 @@ if (args.noshow==0):
 	fig, ax = plt.subplots()
 	
 	img = ax.imshow(I, extent=extent, cmap='plasma')
-	ax.set_title(dataHeader['component'])
+	ax.set_title(f"{dataHeader['component']}; ({dataHeader['position']})m")
 	ax.set_xlabel(dataHeader['xlabel'])
 	ax.set_ylabel(dataHeader['ylabel'])
 	cbar = fig.colorbar(img, ax=ax)

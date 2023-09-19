@@ -18,10 +18,13 @@ plot_type = args.plot_type.lower()
 
 I, sigI, N, dataHeader, L = mc.extractMcStasData(inFile) 
 component = dataHeader['component']
+position = dataHeader['position']
+title = f'{component}; ({position})m'
 #print(json.dumps(dataHeader, indent=4))
 print(inFile)
 
 if dataHeader['type'][:8]=="array_2d":
+	print(dataHeader)
 	extent = np.array(dataHeader['xylimits'].split(),dtype=float)
 	
 	# Call the mcstas2TIFF function to generate .tif files
@@ -39,7 +42,7 @@ if dataHeader['type'][:8]=="array_2d":
 		plt.errorbar(x, cross_section, err_cross_section, capsize=2)
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
-		plt.title("X Cross-Section: "+component)
+		plt.title("X Cross-Section: "+title)
 		plt.show()
 	elif plot_type == "y":
 		unit = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
@@ -54,7 +57,7 @@ if dataHeader['type'][:8]=="array_2d":
 		plt.xlim(extent[2], extent[3])
 		plt.xlabel(dataHeader['ylabel'])
 		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
-		plt.title("Y Cross-Section: "+component)
+		plt.title("Y Cross-Section: "+title)
 		plt.show()
 	elif plot_type == "full":
 		unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
@@ -67,7 +70,7 @@ if dataHeader['type'][:8]=="array_2d":
 		plt.colorbar().set_label('Intensity [n/s]/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel(dataHeader['ylabel'])
-		plt.title(component, pad=10)
+		plt.title(title, pad=10)
 		plt.show()
 
 		if (args.showN==1):
@@ -75,7 +78,7 @@ if dataHeader['type'][:8]=="array_2d":
 			plt.colorbar().set_label('N/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 			plt.xlabel(dataHeader['xlabel'])
 			plt.ylabel(dataHeader['ylabel'])
-			plt.title(component, pad=10)
+			plt.title(title, pad=10)
 			plt.show()
 
 		## Show the TIFF file with tags
@@ -93,14 +96,14 @@ elif dataHeader['type'][:8]=="array_1d":
 	plt.errorbar(L, I, yerr=sigI, fmt='o', capsize=2)
 	plt.xlabel(dataHeader['xlabel'])
 	plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
-	plt.title(component, pad=10)
+	plt.title(title, pad=10)
 	plt.show()
 
 	if (args.showN==1):
 		plt.plot(L, N)
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel('N/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
-		plt.title(component, pad=10)
+		plt.title(title, pad=10)
 		plt.show()
 
 else:
