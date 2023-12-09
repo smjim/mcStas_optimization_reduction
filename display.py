@@ -43,14 +43,15 @@ if dataHeader['type'][:8]=="array_2d":
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 		plt.title("X Cross-Section: "+title)
+		plt.tight_layout()
 		plt.show()
 	elif plot_type == "y":
 		unit = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
 		dx = (extent[3] - extent[2]) / np.array(imI).shape[0] 
 
 		# Generate Y cross-section
-		cross_section = np.sum(np.array(imI), axis=1)  # Sum along the horizontal axis
-		err_cross_section = np.sqrt(np.sum(np.square(np.array(sigI)), axis=1))
+		cross_section = np.flip(np.sum(np.array(imI), axis=1))  # Sum along the horizontal axis
+		err_cross_section = np.flip(np.sqrt(np.sum(np.square(np.array(sigI)), axis=1)))
 
 		x = np.linspace(extent[3], extent[2], np.size(cross_section))
 		plt.errorbar(x, cross_section, err_cross_section, capsize=2)
@@ -58,6 +59,7 @@ if dataHeader['type'][:8]=="array_2d":
 		plt.xlabel(dataHeader['ylabel'])
 		plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 		plt.title("Y Cross-Section: "+title)
+		plt.tight_layout()
 		plt.show()
 	elif plot_type == "full":
 		unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
@@ -66,11 +68,14 @@ if dataHeader['type'][:8]=="array_2d":
 		dx = (extent[1] - extent[0]) / (np.array(imI).shape[1] - 1)
 		dy = (extent[3] - extent[2]) / (np.array(imI).shape[0] - 1)
 
-		plt.imshow(np.array(imI), extent=extent, cmap='plasma') 
+		#plt.imshow(np.array(imI), extent=extent, cmap='plasma', norm='log') 
+		#plt.imshow(np.flipud(np.array(imI)), extent=extent, cmap='plasma', norm='log', vmin=1, vmax=1e6) 
+		plt.imshow(np.flipud(np.array(imI)), extent=extent, cmap='plasma', norm='log') 
 		plt.colorbar().set_label('Intensity [n/s]/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel(dataHeader['ylabel'])
 		plt.title(title, pad=10)
+		plt.tight_layout()
 		plt.show()
 
 		if (args.showN==1):
@@ -79,6 +84,7 @@ if dataHeader['type'][:8]=="array_2d":
 			plt.xlabel(dataHeader['xlabel'])
 			plt.ylabel(dataHeader['ylabel'])
 			plt.title(title, pad=10)
+			plt.tight_layout()
 			plt.show()
 
 		## Show the TIFF file with tags
@@ -97,6 +103,7 @@ elif dataHeader['type'][:8]=="array_1d":
 	plt.xlabel(dataHeader['xlabel'])
 	plt.ylabel('Intensity [n/s]/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 	plt.title(title, pad=10)
+	plt.tight_layout()
 	plt.show()
 
 	if (args.showN==1):
@@ -104,6 +111,7 @@ elif dataHeader['type'][:8]=="array_1d":
 		plt.xlabel(dataHeader['xlabel'])
 		plt.ylabel('N/ '+"{:.2e}".format(dx)+' ['+unit[0]+']')
 		plt.title(title, pad=10)
+		plt.tight_layout()
 		plt.show()
 
 else:

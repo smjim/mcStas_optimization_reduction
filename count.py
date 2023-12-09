@@ -77,12 +77,13 @@ if (args.noshow==0):
 	# Show data with mask outlined
 	fig, ax = plt.subplots()
 	
-	img = ax.imshow(I, extent=extent, cmap='plasma')
+	img = ax.imshow(np.flipud(I), extent=extent, cmap='plasma', norm='log')
+	#img = ax.imshow(np.flipud(I), extent=extent, cmap='plasma', norm='log', vmin=10, vmax=1e6)
 	ax.set_title(f"{dataHeader['component']}; ({dataHeader['position']})m")
 	ax.set_xlabel(dataHeader['xlabel'])
 	ax.set_ylabel(dataHeader['ylabel'])
 	cbar = fig.colorbar(img, ax=ax)
-	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' [s*'+unit1[0]+'*'+unit2[0]+']')
+	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 	
 	# Add patch for ROI outline on plot
 	if args.square:
