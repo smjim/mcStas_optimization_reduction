@@ -56,8 +56,9 @@ sum_err = np.sqrt(np.sum(np.square(I[mask])))
 unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 unit2 = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
 
-print("Sum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}".format(sum_err)) 
-print("Area within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']\n') 
+roi_info = "Sum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}\n".format(sum_err) 
+roi_info += "Area within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']\n' 
+print(roi_info)
 
 if (args.noshow==0):
 	import matplotlib.pyplot as plt
@@ -77,21 +78,25 @@ if (args.noshow==0):
 	# Show data with mask outlined
 	fig, ax = plt.subplots()
 	
-	img = ax.imshow(np.flipud(I), extent=extent, cmap='plasma', norm='log')
-	#img = ax.imshow(np.flipud(I), extent=extent, cmap='plasma', norm='log', vmin=10, vmax=1e6)
+	#img = ax.imshow(np.flipud(I), extent=extent, cmap='plasma', norm='log')
+	img = ax.imshow(np.flipud(I), extent=extent, cmap='plasma', norm='log', vmin=10, vmax=5e6)
 	ax.set_title(f"{dataHeader['component']}; ({dataHeader['position']})m")
 	ax.set_xlabel(dataHeader['xlabel'])
 	ax.set_ylabel(dataHeader['ylabel'])
 	cbar = fig.colorbar(img, ax=ax)
-	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	#cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	cbar.set_label('$n \cdot s^2$'+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 	
 	# Add patch for ROI outline on plot
 	if args.square:
 		square = Rectangle((x0, y0), (x1 - x0), (y1 - y0), fill=False, color='red', linewidth=2)
 		ax.add_patch(square)
+		
 	if args.circle:
 		circle = Circle((x0, y0), radius, fill=False, color='red', linewidth=2)
 		ax.add_patch(circle)
+
+	ax.annotate(roi_info, xy=(0, 1), xycoords='axes fraction', ha='left', va='top', fontsize=10, color='red')
 	
 	plt.show()
 
