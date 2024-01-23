@@ -32,6 +32,10 @@ if dataHeader['type'][:8]=="array_1d":
 	# find integrated intensity
 	print("sum within fwhm: "+str(np.sum(I[left_idx:right_idx]))+" ± "+str(np.sum(sigI[left_idx:right_idx])))
 
+	# find integrated intensity per angstrom [n/s/AA]
+	integrated_scaled_intensity = np.sum(I/ L) 
+	print(f"integrated intensity per angstrom: {integrated_scaled_intensity:.4e}")
+
 	unit = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 	dx = (L[-1] - L[0]) / np.size(L) 
 

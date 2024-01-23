@@ -2,14 +2,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import argparse 
 
 # Define fontsize
 fontsize = 14
 
 # Load dataset into pandas df
-parser.add_argument('filename', type=str, help='Filename for csv output of run tests')
-df = pd.read_csv(filename)
+df = pd.read_csv('param_scan_output.csv')
 
 # Baseline configuration
 baseline_config = [10.0, 0.5, 4.0, 0.0005, -0.3, -0.1]

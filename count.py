@@ -56,8 +56,11 @@ sum_err = np.sqrt(np.sum(np.square(I[mask])))
 unit1 = re.findall(r"\[(.*?)\]", dataHeader['xlabel'])
 unit2 = re.findall(r"\[(.*?)\]", dataHeader['ylabel'])
 
-roi_info = "Sum within ROI: ", "{:.2e}".format(roi_sum), " ± ", "{:.2e}\n".format(sum_err) 
-roi_info += "Area within ROI: ", "{:.2e}".format(roi_area)+' ['+unit1[0]+'*'+unit2[0]+']\n' 
+roi_info = f"Sum within ROI: {roi_sum:.2e} ± {sum_err:.2e}\n"
+#roi_info += f"Area within ROI: {roi_area:.2e} [{unit1[0]}$\cdot${unit2[0]}]" 
+if args.circle:
+	#roi_info += f"ROI: ({x0}, {y0}) [cm], r = {radius} [cm]" 
+	roi_info += f"ROI: ({x0}, {y0}), r = {radius}" 
 print(roi_info)
 
 if (args.noshow==0):
@@ -84,8 +87,8 @@ if (args.noshow==0):
 	ax.set_xlabel(dataHeader['xlabel'])
 	ax.set_ylabel(dataHeader['ylabel'])
 	cbar = fig.colorbar(img, ax=ax)
-	#cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
-	cbar.set_label('$n \cdot s^2$'+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	cbar.set_label(dataHeader['zvar']+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
+	#cbar.set_label('$n \cdot s^2$'+'/ '+"{:.2e}".format(dx*dy)+' ['+unit1[0]+'*'+unit2[0]+']')
 	
 	# Add patch for ROI outline on plot
 	if args.square:
@@ -96,7 +99,15 @@ if (args.noshow==0):
 		circle = Circle((x0, y0), radius, fill=False, color='red', linewidth=2)
 		ax.add_patch(circle)
 
-	ax.annotate(roi_info, xy=(0, 1), xycoords='axes fraction', ha='left', va='top', fontsize=10, color='red')
+	ax.annotate(roi_info,
+            xy=(0.05, 0.95),
+            xycoords='axes fraction',
+            ha='left',
+            va='top',
+            fontsize=10,
+            color='black',
+            bbox=dict(facecolor='white', edgecolor='black', pad=3.5))
+            #bbox=dict(facecolor='white', edgecolor='black', boxstyle='round', alpha=0.7, pad=0.5))
 	
 	plt.show()
 
